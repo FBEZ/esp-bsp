@@ -1,0 +1,18 @@
+version: "0.1.0"
+description: Board Support Package for ESP-EYE
+#url: https://github.com/espressif/esp-bsp/tree/master/esp32_s3_eye
+
+targets:
+  - esp32
+
+dependencies:
+  idf: ">=4.4.5"
+
+
+  esp32-camera:
+    version: "^2.0.2"
+    public: true
+
+  esp_codec_dev:
+    version: "^1"
+    public: true
