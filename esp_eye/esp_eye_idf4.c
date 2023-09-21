@@ -5,16 +5,17 @@
  */
 
 #include "esp_err.h"
-#include "bsp/esp32_s3_eye.h"
+#include "bsp/esp_eye.h"
 #include "bsp_err_check.h"
-#include "esp_codec_dev_defaults.h"
+//#include "esp_codec_dev_defaults.h"
 
-static const char *TAG = "S3-EYE";
+static const char *TAG = "EYE";
 
 /* Sample rate of MSM261S4030H0 */
 #define BSP_MIC_SAMPLE_RATE (48000u)
 
 /* This configuration is used by default in bsp_audio_init() */
+/*
 #define BSP_I2S_SIMPLEX_MONO_CFG(_sample_rate)                      \
     {                                                                 \
         .mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX,          \
@@ -28,56 +29,57 @@ static const char *TAG = "S3-EYE";
         .tx_desc_auto_clear = true,                                   \
         .intr_alloc_flags = ESP_INTR_FLAG_LEVEL2 | ESP_INTR_FLAG_IRAM \
     }
+    */
 
-static const audio_codec_data_if_t *i2s_data_if = NULL;  /* Codec data interface */
+// static const audio_codec_data_if_t *i2s_data_if = NULL;  /* Codec data interface */
 
-esp_err_t bsp_audio_init(const i2s_config_t *i2s_config)
-{
-    esp_err_t ret = ESP_FAIL;
+// esp_err_t bsp_audio_init(const i2s_config_t *i2s_config)
+// {
+//     esp_err_t ret = ESP_FAIL;
 
-    if (i2s_data_if != NULL) {
-        /* Audio was initialized before */
-        return ESP_OK;
-    }
+//     if (i2s_data_if != NULL) {
+//         /* Audio was initialized before */
+//         return ESP_OK;
+//     }
 
-    /* Setup I2S peripheral */
-    const i2s_pin_config_t i2s_pin_config = {
-        .mck_io_num = GPIO_NUM_NC,
-        .bck_io_num = BSP_I2S_SCLK,
-        .ws_io_num = BSP_I2S_LCLK,
-        .data_out_num = GPIO_NUM_NC,
-        .data_in_num = BSP_I2S_DIN
-    };
+//     /* Setup I2S peripheral */
+//     const i2s_pin_config_t i2s_pin_config = {
+//         .mck_io_num = GPIO_NUM_NC,
+//         .bck_io_num = BSP_I2S_SCLK,
+//         .ws_io_num = BSP_I2S_LCLK,
+//         .data_out_num = GPIO_NUM_NC,
+//         .data_in_num = BSP_I2S_DIN
+//     };
 
-    /* Setup I2S channels */
-    const i2s_config_t std_cfg_default = BSP_I2S_SIMPLEX_MONO_CFG(BSP_MIC_SAMPLE_RATE);
-    const i2s_config_t *p_i2s_cfg = &std_cfg_default;
-    if (i2s_config != NULL) {
-        p_i2s_cfg = i2s_config;
-    }
+//     /* Setup I2S channels */
+//     const i2s_config_t std_cfg_default = BSP_I2S_SIMPLEX_MONO_CFG(BSP_MIC_SAMPLE_RATE);
+//     const i2s_config_t *p_i2s_cfg = &std_cfg_default;
+//     if (i2s_config != NULL) {
+//         p_i2s_cfg = i2s_config;
+//     }
 
-    ESP_ERROR_CHECK(i2s_driver_install(CONFIG_BSP_I2S_NUM, p_i2s_cfg, 0, NULL));
-    ESP_GOTO_ON_ERROR(i2s_set_pin(CONFIG_BSP_I2S_NUM, &i2s_pin_config), err, TAG, "I2S set pin failed");
+//     ESP_ERROR_CHECK(i2s_driver_install(CONFIG_BSP_I2S_NUM, p_i2s_cfg, 0, NULL));
+//     ESP_GOTO_ON_ERROR(i2s_set_pin(CONFIG_BSP_I2S_NUM, &i2s_pin_config), err, TAG, "I2S set pin failed");
 
-    audio_codec_i2s_cfg_t i2s_cfg = {
-        .port = CONFIG_BSP_I2S_NUM,
-    };
-    i2s_data_if = audio_codec_new_i2s_data(&i2s_cfg);
-    BSP_NULL_CHECK_GOTO(i2s_data_if, err);
+//     audio_codec_i2s_cfg_t i2s_cfg = {
+//         .port = CONFIG_BSP_I2S_NUM,
+//     };
+//     i2s_data_if = audio_codec_new_i2s_data(&i2s_cfg);
+//     BSP_NULL_CHECK_GOTO(i2s_data_if, err);
 
-    return ESP_OK;
+//     return ESP_OK;
 
-err:
-    i2s_driver_uninstall(CONFIG_BSP_I2S_NUM);
-    return ret;
-}
+// err:
+//     i2s_driver_uninstall(CONFIG_BSP_I2S_NUM);
+//     return ret;
+// }
 
-const audio_codec_data_if_t *bsp_audio_get_codec_itf(void)
-{
-    return i2s_data_if;
-}
+// const audio_codec_data_if_t *bsp_audio_get_codec_itf(void)
+// {
+//     return i2s_data_if;
+// }
 
-esp_err_t bsp_adc_initialize(void)
-{
-    return ESP_OK;
-}
+// esp_err_t bsp_adc_initialize(void)
+// {
+//     return ESP_OK;
+// }

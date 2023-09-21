@@ -13,7 +13,7 @@
 
 #include "sdkconfig.h"
 #include "driver/gpio.h"
-#include "esp_codec_dev.h"
+//#include "esp_codec_dev.h"
 #include "iot_button.h"
 
 #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
@@ -210,6 +210,9 @@ esp_err_t bsp_leds_init(void);
  */
 esp_err_t bsp_led_set(const bsp_led_t led_io, const bool on);
 
+
+// TODO
+
 /**************************************************************************************************
  *
  * I2S audio interface
@@ -244,11 +247,11 @@ esp_err_t bsp_led_set(const bsp_led_t led_io, const bool on);
  *      - ESP_ERR_NO_MEM        No memory for storing the channel information
  *      - ESP_ERR_INVALID_STATE This channel has not initialized or already started
  */
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-esp_err_t bsp_audio_init(const i2s_config_t *i2s_config);
-#else
-esp_err_t bsp_audio_init(const i2s_std_config_t *i2s_config);
-#endif
+// #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
+// esp_err_t bsp_audio_init(const i2s_config_t *i2s_config);
+// #else
+// esp_err_t bsp_audio_init(const i2s_std_config_t *i2s_config);
+// #endif
 
 /**
  * @brief Get codec I2S interface (initialized in bsp_audio_init)
@@ -256,14 +259,14 @@ esp_err_t bsp_audio_init(const i2s_std_config_t *i2s_config);
  * @return
  *      - Pointer to codec I2S interface handle or NULL when error occured
  */
-const audio_codec_data_if_t *bsp_audio_get_codec_itf(void);
+//const audio_codec_data_if_t *bsp_audio_get_codec_itf(void);
 
 /**
  * @brief Initialize microphone codec device
  *
  * @return Pointer to codec device handle or NULL when error occured
  */
-esp_codec_dev_handle_t bsp_audio_codec_microphone_init(void);
+//esp_codec_dev_handle_t bsp_audio_codec_microphone_init(void);
 
 /**************************************************************************************************
  *
@@ -275,7 +278,7 @@ esp_codec_dev_handle_t bsp_audio_codec_microphone_init(void);
  * After initialization of ADC, use adc_handle when using ADC driver.
  **************************************************************************************************/
 
-#define BSP_ADC_UNIT     ADC_UNIT_1
+//#define BSP_ADC_UNIT     ADC_UNIT_1
 
 /**
  * @brief Initialize ADC
@@ -284,19 +287,19 @@ esp_codec_dev_handle_t bsp_audio_codec_microphone_init(void);
  *
  * @param[out] adc_handle Returned ADC handle
  */
-esp_err_t bsp_adc_initialize(void);
+//esp_err_t bsp_adc_initialize(void);
 
 
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
-/**
- * @brief Get ADC handle
- *
- * @note This function is available only in IDF5 and higher
- *
- * @return ADC handle
- */
-adc_oneshot_unit_handle_t bsp_adc_get_handle(void);
-#endif
+// #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
+// /**
+//  * @brief Get ADC handle
+//  *
+//  * @note This function is available only in IDF5 and higher
+//  *
+//  * @return ADC handle
+//  */
+// adc_oneshot_unit_handle_t bsp_adc_get_handle(void);
+// #endif
 
 #ifdef __cplusplus
 }
