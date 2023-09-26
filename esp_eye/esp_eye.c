@@ -95,31 +95,31 @@ esp_err_t bsp_led_set(const bsp_led_t led_io, const bool on)
 esp_err_t bsp_camera_init()
 {
 
-    // camera_config_t config = BSP_CAMERA_DEFAULT_CONFIG;
+    camera_config_t config = BSP_CAMERA_DEFAULT_CONFIG;
 
-    // // camera init
-    // esp_err_t err = esp_camera_init(&config);
-    // if (err != ESP_OK)
-    // {
-    //     ESP_LOGE(TAG, "Camera init failed with error 0x%x", err);
-    //     return ESP_FAIL;
-    // }
+    // camera init
+    esp_err_t err = esp_camera_init(&config);
+    if (err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Camera init failed with error 0x%x", err);
+        return ESP_FAIL;
+    }
 
-    // sensor_t *s = esp_camera_sensor_get();
-    // if (s->id.PID == OV3660_PID || s->id.PID == OV2640_PID)
-    //     s->set_vflip(s, 1); //flip it back
-    // else if (s->id.PID == GC0308_PID){
-    //     s->set_hmirror(s, 0);
-    // }
-    // else if (s->id.PID == GC032A_PID){
-    //     s->set_vflip(s, 1);
-    // }
+    sensor_t *s = esp_camera_sensor_get();
+    if (s->id.PID == OV3660_PID || s->id.PID == OV2640_PID)
+        s->set_vflip(s, 1); //flip it back
+    else if (s->id.PID == GC0308_PID){
+        s->set_hmirror(s, 0);
+    }
+    else if (s->id.PID == GC032A_PID){
+        s->set_vflip(s, 1);
+    }
 
-    // if (s->id.PID == OV3660_PID)
-    // {
-    //     s->set_brightness(s, 2);
-    //     s->set_contrast(s, 3);
-    // }
+    if (s->id.PID == OV3660_PID)
+    {
+        s->set_brightness(s, 2);
+        s->set_contrast(s, 3);
+    }
 
     return ESP_OK;
 }

@@ -15,6 +15,7 @@
 #include "driver/gpio.h"
 //#include "esp_codec_dev.h"
 #include "iot_button.h"
+#include "esp_camera.h"
 
 
 /**************************************************************************************************
