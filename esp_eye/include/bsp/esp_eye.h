@@ -16,11 +16,6 @@
 //#include "esp_codec_dev.h"
 #include "iot_button.h"
 
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-#include "driver/i2s.h"
-#else
-#include "driver/i2s_std.h"
-#endif
 
 /**************************************************************************************************
  * ESP-EYE pinout
@@ -51,7 +46,7 @@
 
 
 /* Others */
-#define BSP_BUTTONS_IO       (GPIO_NUM_15) // All 4 buttons mapped to this GPIO
+#define BSP_BUTTON_FUN_IO      (GPIO_NUM_15) // Function button
 
 typedef enum bsp_led_t {
     BSP_LED_RED = (GPIO_NUM_21),
@@ -74,13 +69,11 @@ extern "C" {
  * iot_button_register_cb(btns[0], ...
  * \endcode
  **************************************************************************************************/
-// typedef enum {
-//     BSP_BUTTON_MENU = 0,
-//     BSP_BUTTON_DOWN,
-//     BSP_BUTTON_UP,
-//     BSP_BUTTON_PLAY,
-//     BSP_BUTTON_NUM
-// } bsp_button_t;
+typedef enum {
+    BSP_BUTTON_FUN = 0,
+    BSP_BUTTON_BOOT, 
+    BSP_BUTTON_NUM
+} bsp_button_t;
 
 /**
  * @brief Initialize all buttons
@@ -145,7 +138,7 @@ esp_err_t bsp_i2c_deinit(void);
  * \endcode
  **************************************************************************************************/
 /**
- * @brief ESP32-S3-EYE camera default configuration
+ * @brief ESP-EYE camera default configuration
  *
  * In this configuration we select RGB565 color format and 240x240 image size - matching the display.
  * We use double-buffering for the best performance.
@@ -182,7 +175,12 @@ esp_err_t bsp_i2c_deinit(void);
         .fb_location = CAMERA_FB_IN_PSRAM,\
         .sccb_i2c_port = BSP_I2C_NUM,     \
     }
-
+/**
+ * @brief Initialize camera with default configuration
+ * 
+ * @return esp_err_t 
+ */
+esp_err_t bsp_camera_init();
 
 /**************************************************************************************************
  *
@@ -211,95 +209,6 @@ esp_err_t bsp_leds_init(void);
 esp_err_t bsp_led_set(const bsp_led_t led_io, const bool on);
 
 
-// TODO
-
-/**************************************************************************************************
- *
- * I2S audio interface
- *
- * There is only one device connected to the I2S peripheral
- *  - MEMSensing Microsystems MSM261S4030H0: 48kHz, 24bit mono digital microphone
- *
- * For microphone initialization use bsp_audio_codec_microphone_init() which is inside initialize I2S with bsp_audio_init().
- * After microphone initialization, use functions from esp_codec_dev for record audio.
- * Example audio play:
- * \code{.c}
- * esp_codec_dev_set_out_vol(spk_codec_dev, DEFAULT_VOLUME);
- * esp_codec_dev_open(spk_codec_dev, &fs);
- * esp_codec_dev_write(spk_codec_dev, wav_bytes, bytes_read_from_spiffs);
- * esp_codec_dev_close(spk_codec_dev);
- * \endcode
- **************************************************************************************************/
-
-/**
- * @brief Init audio
- *
- * @note There is no deinit audio function. Users can free audio resources by calling i2s_del_channel()
- * @warning The type of i2s_config param is depending on IDF version.
- * @param[in]  i2s_config I2S configuration. Pass NULL to use default values (Mono, duplex, 16bit, 22050 Hz)
- * @param[out] tx_channel I2S TX channel
- * @param[out] rx_channel I2S RX channel
- * @return
- *      - ESP_OK                On success
- *      - ESP_ERR_NOT_SUPPORTED The communication mode is not supported on the current chip
- *      - ESP_ERR_INVALID_ARG   NULL pointer or invalid configuration
- *      - ESP_ERR_NOT_FOUND     No available I2S channel found
- *      - ESP_ERR_NO_MEM        No memory for storing the channel information
- *      - ESP_ERR_INVALID_STATE This channel has not initialized or already started
- */
-// #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-// esp_err_t bsp_audio_init(const i2s_config_t *i2s_config);
-// #else
-// esp_err_t bsp_audio_init(const i2s_std_config_t *i2s_config);
-// #endif
-
-/**
- * @brief Get codec I2S interface (initialized in bsp_audio_init)
- *
- * @return
- *      - Pointer to codec I2S interface handle or NULL when error occured
- */
-//const audio_codec_data_if_t *bsp_audio_get_codec_itf(void);
-
-/**
- * @brief Initialize microphone codec device
- *
- * @return Pointer to codec device handle or NULL when error occured
- */
-//esp_codec_dev_handle_t bsp_audio_codec_microphone_init(void);
-
-/**************************************************************************************************
- *
- * ADC interface
- *
- * There are multiple devices connected to ADC peripheral:
- *  - Buttons
- *
- * After initialization of ADC, use adc_handle when using ADC driver.
- **************************************************************************************************/
-
-//#define BSP_ADC_UNIT     ADC_UNIT_1
-
-/**
- * @brief Initialize ADC
- *
- * The ADC can be initialized inside BSP, when needed.
- *
- * @param[out] adc_handle Returned ADC handle
- */
-//esp_err_t bsp_adc_initialize(void);
-
-
-// #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
-// /**
-//  * @brief Get ADC handle
-//  *
-//  * @note This function is available only in IDF5 and higher
-//  *
-//  * @return ADC handle
-//  */
-// adc_oneshot_unit_handle_t bsp_adc_get_handle(void);
-// #endif
 
 #ifdef __cplusplus
 }
